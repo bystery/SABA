@@ -1,0 +1,23 @@
+The office access system is a high-security turnstile that allows only one person to enter per card swipe and is directly linked to the company's computer system.
+
+The IT manager, Jeffery Sharp, has limited access to the security system but is authorized to synchronize it for events like leap years or date changes.
+
+Jeffery Sharp claimed he was up all night packing for a vacation to Aruba and was not at the office after the party.
+
+Jeffery provided a printout showing only two people entered the office that morning: Donna Blake (6:10 a.m.) and George Wilson (6:25 a.m.).
+
+Donna Blake noted a "computer glitch" where her reports were automatically being dated with tomorrow's date instead of today's.
+
+The janitor, Pete Thompson, claimed he worked from 1:00 a.m. to 4:00 a.m. to clean the office, yet his name did not appear on the morning access report.
+
+The head of security, Mr. Connelly, stated that the local IT manager cannot shut down the system without blocking all entry and exit.
+
+A second access report for the previous two days showed Pete entering at 1:07 a.m. and Jeffery entering at 4:15 a.m..
+
+This second report was erroneously dated "today," while the report showing Wilson and Blake was dated "tomorrow".
+
+The detective realized that the thief manipulated the computer system's date to hide their entry.
+
+By moving the system date forward one day, Jeffery made his 4:15 a.m. entry (the night of the theft) appear as if it happened on a future date, effectively "hiding" it from a standard check of the current day's logs.
+
+The final proof was that the date on Jeffery’s airline tickets did not match the date on the access report he provided for the day of the robbery.
