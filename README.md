@@ -1,90 +1,99 @@
-# Complex-Narrative-Reasoning: 迭代式框架的复杂叙事推理
+# SABA (Self-Awareness Before Action) 官方实现仓库
 
-## 引用方式 (Citation)：提供 BibTeX 格式的引用信息，方便别人引用你的工作。
+本仓库是论文 《Self-Awareness before Action: Stop and Identify Logical Gaps in Complex Reasoning》 的官方实现代码。
 
-## 项目概述
+# 📖 项目简介
 
-本项目实现了一个基于大语言模型（LLM）的迭代式框架（IF-QSR），用于解决复杂叙事中的故事推理任务。通过问题分解与故事推理的迭代循环，系统能够处理多线索、多角色的复杂叙事场景，并在不同难度级别的数据集上进行评估。
+SABA 是一种创新的通用推理框架。与传统的“生成后再修正”（如 Self-Refine）不同，SABA 引入了 前置觉察（Self-Awareness） 机制。该机制使大语言模型能够在执行推理动作前，主动识别任务逻辑链中的复杂程度与信息断层。在复杂叙事推理任务中，显著减少“逻辑跳跃”并有效抑制幻觉生成。
 
-## 📁 项目结构
-Complex-Narrative-Reasoning/  
-├── ablation_study/          # 消融实验代码与结果  
-├── baseline/                # 基线模型实现  
-├── dataset/                 # 三个难度等级的数据集  
-├── Evaluation_Similarity/     # 评估指标计算  
-├── IF-QSR/                  # 主框架实现  
-├── sbert-base-chinese-nli/  # 相似度模型（已下载）  
-├── .gitignore  
-├── config.yaml             # 配置文件   
-├── LICENSE  
-├── README.md              # 本文档  
-└── requirements.txt       # Python依赖  
+# 🌟 本仓库包含
+- 自建的```Detective Puzzle```数据集✅
+- SABA实现✅
 
-## 快速开始
+# 📁 项目结构
+```
+SABA/  
+├── SABA/                    # SABA 主框架实现  
+├── dataset/                 # 包含 Simple, Medium, Complex 三个等级的案件集  
+├── Evaluation_Similarity/   # 评估指标计算模块  
+├── requirements.txt         # 环境依赖列表  
+├── LICENSE                  # 项目许可证  
+└── README.md                # 本说明文档  
+```
 
-步骤1：环境配置
-1. 创建虚拟环境（Python 3.8+） python -m venv myenv  
-2. 激活虚拟环境
-3. 安装依赖  pip install -r requirements.txt
+# 🚀 快速开始
 
-步骤2：配置大模型,编辑 config.yaml 文件：  
+## 1. 环境配置
 
-（1）大模型配置  
-api_config:  
-  base_url: "https://api.deepseek.com/v1"    
-  api_key_env_var: "DEEPSEEK_API_KEY"  
-llm_settings:   
-  model_name: "deepseek-chat"  
+建议使用 Python 3.12+ 环境：
+```
+## 创建并激活虚拟环境
+python -m venv myenv
+source myenv/bin/activate  # Linux/macOS
+## Windows 用户请使用: myenv\Scripts\activate
 
-（2）测试案件配置  
-paths:  
-  input_data_dir: "../dataset/artice_path"  # 指向具体案件目录  
+# 安装依赖
+pip install -r requirements.txt
+```
 
-步骤3：运行主框架 **IF-QSR.py**  
-运行成功后，生成两个输出文件：  
-SR_model_output.json – 保存最终结果（列表中的最后一个元素），用于召回率计算  
-Q_model_output.json – 保存中间结果，用于线索覆盖度计算  
+## 2. 模型与数据配置
+直接在代码头部修改配置部分。示例如下：
+```
+# --- 路径配置 ---
+PATH_CONFIG = {
+    "MODEL_ENCODER_PATH": "YOUR_MODEL_PATH",
+    "GOLD_PATH": "CASE/Answer.txt",
+    "TEST_PATH": "CASE/report.json"
+}
 
-步骤4：评估方法  
-召回率计算  
-1.从 SR_model_output.json 提取最后一个元素  
-2.复制到 Evaluation_Similarity/awaiting_test_results.json  
-3.修改with open(r"../dataset/对应案件/gold-standard-answer-atomic.json", 'r', encoding='utf-8') as f:  
-4.运行 Evaluation_Similarity/Evaluation.py  
+PATH_CONFIG={
+    "INPUT_PATH": "CASE/Mystery_text.txt",
+    "OUTPUT_QA_PATH": "CASE/SABA_PostRun_KB/q_a.json",
+    "OUTPUT_REPORT_PATH": "CASE/SABA_PostRun_KB/report.json"
+}
 
-线索覆盖度计算  
-1.查看 predefined_cues.txt 中的预定义线索  
-2.人工检查 Q_model_output.json 是否提及这些线索  
-3.计算提及线索的覆盖率  
+# --- LLM 客户端配置 ---
+LLM_CONFIG = {
+    "api_key": "YOUR_API_KEY",
+    "base_url": "BASE_URL",
+    "model_name": "MODE_NAME",
+    "temperature": 0.0
+}
+```
+## 3. 运行主框架
+确认配置无误后，执行主程序开始推理过程： 
+```
+python SABA/SABA.py
+```
+运行完成后，系统将在对应目录下生成两个关键文件：
+- ```q_a.json```: 保存中间探索过程（用于计算线索覆盖度）。  
 
-## 数据集
-dataset 目录中存储三个不同等级难度的数据集：   
-1.简单难度 (simple_case/)  
-2.中等难度 (medium_case/)  
-3.困难难度 (complex_case/)  
-**每个案件目录包含：**  
-输入文件  
-1.Event.json – 事件描述  
-2.evidence.json – 证据链  
-3.role.json – 角色信息  
-评估文件  
-1.gold-standard-answer-atomic.json – 黄金标准答案（用于召回率计算）  
-2.predefined_cues.txt 案件预定义线索 （用于线索覆盖度计算）
-
-## baseline模型的评估
-线索覆盖度评估  
-1.运行基线模型，将控制台输出内容保存为 .txt 文件  
-2.寻找输出中是否提及 predefined_cues.txt 中的线索  
-3.人工进行线索覆盖度的计算  
-
-召回率评估  
-1.提取控制台输出的最后结果  
-2.复制到 Evaluation_Similarity/awaiting_test_results.json    
-3.修改with open(r"../dataset/对应案件/gold-standard-answer-atomic.json", 'r', encoding='utf-8') as f:    
-4.运行 Evaluation_Similarity/Evaluation.py    
+- ```report.json```: 保存最终推理结果（用于计算召回率）。
 
 
+# 📊 评估方法
+本项目采用双重指标评估模型在复杂叙事推理中的表现：
 
+## 指标 A：Semantic Recall Rate(SRR)，评估模型输出与标准答案的匹配程度。
+- 下载```sbert-base-chinese-nli```模型
+- 设置路径配置运行评估脚本
+```
+python Evaluation_Similarity/Evaluation.py
+```
 
+## 指标 B：ClueCoverageRate(CCR)，评估模型是否识别并利用了案件的关键线索。
+- 查看对应案件目录下的 ```predefined_cues.txt```。
+- 人工检查```q_a.json```中是否包含了上述预定义线索。
 
+# 📂 数据集说明
 
+dataset 目录按难度分为三个等级，每个案件目录包含：
+- 输入端: ```Mystery_text.txt```原始案件信息
+- SABA输出: ```PostRun_KB```目录包含了SABA输出
+- 基准端: ```predefined_cues.txt```包含预定义线索、```Answer.txt```包含黄金结果
+
+# 📜 引用方式
+如果您在研究中使用了本仓库的代码或 SABA 框架，请引用我们的论文：
+```
+
+```

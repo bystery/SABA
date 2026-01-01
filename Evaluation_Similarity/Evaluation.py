@@ -4,11 +4,12 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
+
 # --- 配置部分 ---
 PATH_CONFIG = {
-    "MODEL_ENCODER_PATH": "sbert-base-chinese-nli",
-    "GOLD_PATH": "../dataset/Complex_Cases/The Beer Murder/Answer.txt",
-    "TEST_PATH": "../dataset/Complex_Cases/The Beer Murder/PostRun_KB/report.json"
+    "MODEL_ENCODER_PATH": "YOUR_MODEL_PATH",
+    "GOLD_PATH": "CASE/Answer.txt",
+    "TEST_PATH": "CASE/report.json"
 }
 
 # 相似度阈值
@@ -24,11 +25,12 @@ except Exception as e:
 
 # LLM 客户端配置
 LLM_CONFIG = {
-    "api_key": "sk-0b72f099f62f463297eb1d4d0d7860a0",
-    "base_url": "https://api.deepseek.com/v1",
-    "model_name": "deepseek-chat",
+    "api_key": "YOUR_API_KEY",
+    "base_url": "BASE_URL",
+    "model_name": "MODE_NAME",
     "temperature": 0.0
 }
+
 CLIENT = openai.OpenAI(
     api_key=LLM_CONFIG["api_key"],
     base_url=LLM_CONFIG["base_url"]

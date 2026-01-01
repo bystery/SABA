@@ -5,19 +5,20 @@ import os
 
 T_MAX=2
 PATH_CONFIG={
-    "INPUT_PATH": "./dataset/Complex_Cases/The Beer Murder/Mystery_text.txt",
-    "OUTPUT_QA_PATH": "./dataset/Complex_Cases/The Beer Murder/SABA_PostRun_KB/q_a.json",
-    "OUTPUT_REPORT_PATH": "./dataset/Complex_Cases/The Beer Murder/SABA_PostRun_KB/report.json"
+    "INPUT_PATH": "CASE/Mystery_text.txt",
+    "OUTPUT_QA_PATH": "CASE/SABA_PostRun_KB/q_a.json",
+    "OUTPUT_REPORT_PATH": "CASE/SABA_PostRun_KB/report.json"
 }
 TOTAL_USAGE = {"input": 0, "output": 0, "hit": 0}
 
 
 LLM_CONFIG = {
-    "api_key": "sk-0b72f099f62f463297eb1d4d0d7860a0",
-    "base_url": "https://api.deepseek.com/v1",
-    "model_name": "deepseek-chat",
+    "api_key": "YOUR_API_KEY",
+    "base_url": "BASE_URL",
+    "model_name": "MODE_NAME",
     "temperature": 0.0
 }
+
 CLIENT = openai.OpenAI(
     api_key=LLM_CONFIG["api_key"],
     base_url=LLM_CONFIG["base_url"]
