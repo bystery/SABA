@@ -1,7 +1,5 @@
 # SABA (Self-Awareness Before Action) 官方实现仓库
 
-本仓库是论文 《Self-Awareness before Action: Stop and Identify Logical Gaps in Complex Reasoning》 的官方实现代码。
-
 # 📖 项目简介
 
 SABA 是一种创新的通用推理框架。与传统的“生成后再修正”（如 Self-Refine）不同，SABA 引入了 前置觉察（Self-Awareness） 机制。该机制使大语言模型能够在执行推理动作前，主动识别任务逻辑链中的复杂程度与信息断层。在复杂叙事推理任务中，显著减少“逻辑跳跃”并有效抑制幻觉生成。
