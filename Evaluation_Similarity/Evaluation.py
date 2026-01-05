@@ -234,13 +234,9 @@ if __name__ == "__main__":
         print(f"识别嫌疑人: {test_json.get('suspect')}")
         print(f"{'-' * 60}")
         print(f"动机评分 (Motive):")
-        print(f"  F1-Score:  {results['motive']['f1']:.4f}")
-        print(f"  Precision: {results['motive']['p']:.4f}")
         print(f"  Recall:    {results['motive']['r']:.4f}")
         print(f"{'-' * 60}")
         print(f"手法评分 (Modus Operandi):")
-        print(f"  F1-Score:  {results['mo']['f1']:.4f}")
-        print(f"  Precision: {results['mo']['p']:.4f}")
         print(f"  Recall:    {results['mo']['r']:.4f}")
         print("=" * 60)
 

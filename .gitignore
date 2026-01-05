@@ -36,8 +36,9 @@ Thumbs.db              # Windows的缩略图缓存
 /results/*.log
 /results/*.txt
 
-
+SABA_backup.py
 test.py
 test.txt
 detective-puzzles.csv
 Evaluation_Similarity/sbert-base-chinese-nli
+Evaluation_Similarity/Evaluation_backup.py
