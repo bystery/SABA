@@ -1,98 +1,178 @@
-# SABA (Self-Awareness Before Action) 官方实现仓库
+<div align="center">
 
-# 📖 项目简介
+# 🧠 SABA: Self-Awareness before Action
 
-SABA 是一种创新的通用推理框架。与传统的“生成后再修正”（如 Self-Refine）不同，SABA 引入了 前置觉察（Self-Awareness） 机制。该机制使大语言模型能够在执行推理动作前，主动识别任务逻辑链中的复杂程度与信息断层。在复杂叙事推理任务中，显著减少“逻辑跳跃”并有效抑制幻觉生成。
+### Mitigating Logical Inertia via Proactive Cognitive Awareness
 
-# 🌟 本仓库包含
-- 自建的```Detective Puzzle```数据集✅
-- SABA实现✅
+[![ACL 2026](https://img.shields.io/badge/ACL-2026_Findings-8A2BE2)](https://2026.aclweb.org/)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.12+-green.svg)](https://www.python.org/)
 
-# 📁 项目结构
+**Fulong Fan**<sup>1,*</sup> · **Peilin Liu**<sup>1,*</sup> · **Liu FengZhe**<sup>1</sup> · **Shuyan Yang**<sup>2</sup> · **Gang Yan**<sup>2,†</sup>
+
+<sup>1</sup> School of Software, Jilin University &nbsp;|&nbsp; <sup>2</sup> School of Computer Science, Jilin University
+
+<sup>*</sup> Equal contribution &nbsp;|&nbsp; <sup>†</sup> Corresponding author
+
+</div>
+
+---
+
+## ✨ Overview
+
+**SABA** is a novel reasoning framework that introduces a **Self-Awareness Before Action** paradigm for large language models. Unlike traditional "answer-then-correct" approaches (e.g., Self-Refine), SABA proactively audits its own knowledge state *before* committing to a decision — identifying missing premises, logical gaps, and causal inconsistencies before they propagate through the reasoning chain.
+
+In complex, non-interactive narrative reasoning tasks (e.g., detective puzzles), SABA significantly reduces **logical leaps** and suppresses **hallucination** by iteratively constructing a verified knowledge state through structured information fusion and obstacle-driven reasoning.
+
+> 🔥 **Accepted at ACL 2026 Findings.**
+
+---
+
+## 🎯 Key Contributions
+
+- **Self-Awareness Mechanism**: Explicit gap identification before reasoning, preventing premature commitment under incomplete evidence
+- **Information Fusion (IF)**: Transforms raw narratives into dense, structured, and verified evidence representations
+- **Query-driven Structured Reasoning (QSR)**: Treats missing premises as formal reasoning obstacles, resolved via recursive query decomposition and hypothesis construction
+- **Detective Puzzle Benchmark**: A multi-level dataset (Easy / Medium / Complex) for evaluating long-context narrative reasoning under information asymmetry
+- **Dual Evaluation Metrics**: Semantic Recall Rate (SRR) and Clue Coverage Rate (CCR) for assessing both answer correctness and evidence grounding
+
+---
+
+## 📊 Performance Highlights
+
+On the **Detective Puzzle Complex split**, SABA (DeepSeek-V3) achieves:
+
+| Metric | SABA | Best Baseline | Gain |
+|--------|------|---------------|------|
+| Suspect Accuracy (SA) | **79.3%** | 69.8% (GoT) | +9.5% |
+| Clue Coverage Rate (CCR) | **83.3%** | 77.1% (S²R) | +6.2% |
+| Motive Recall (R-M) | **73.4%** | 69.8% (GoT) | +3.6% |
+
+SABA also achieves **state-of-the-art** on HotpotQA, StrategyQA, and Big-Bench Hard while using **23.3% fewer tokens** than Self-Consistency.
+
+---
+
+## 📁 Repository Structure
+
 ```
-SABA/  
-├── SABA/                    # SABA 主框架实现  
-├── dataset/                 # 包含 Simple, Medium, Complex 三个等级的案件集  
-├── Evaluation_Similarity/   # 评估指标计算模块  
-├── requirements.txt         # 环境依赖列表  
-├── LICENSE                  # 项目许可证  
-└── README.md                # 本说明文档  
+SABA/
+├── SABA.py                     # Main SABA framework implementation
+├── dataset/
+│   ├── Easy/                   # 5 cases, ~1050 words each
+│   ├── Medium/                 # 15 cases, ~1150 words each
+│   └── Complex/                # 11 cases, ~950 words each
+│       ├── Mystery_text.txt    # Raw case narrative
+│       ├── predefined_cues.txt # Gold-standard clue list (for CCR)
+│       ├── Answer.txt          # Ground-truth answer
+│       └── PostRun_KB/         # SABA output directory
+│           ├── q_a.json        # Intermediate reasoning trace
+│           └── report.json     # Final prediction results
+├── Evaluation_Similarity/      # Semantic recall evaluator
+├── requirements.txt            # Python dependencies
+└── LICENSE                     # Apache 2.0
 ```
 
-# 🚀 快速开始
+---
 
-## 1. 环境配置
+## 🚀 Quick Start
 
-建议使用 Python 3.12+ 环境：
-```
-## 创建并激活虚拟环境
-python -m venv myenv
-source myenv/bin/activate  # Linux/macOS
-## Windows 用户请使用: myenv\Scripts\activate
+### 1. Environment Setup
 
-# 安装依赖
+```bash
+# Python 3.12+ recommended
+python -m venv saba_env
+source saba_env/bin/activate      # Linux / macOS
+# Windows: saba_env\Scripts\activate
+
 pip install -r requirements.txt
 ```
 
-## 2. 模型与数据配置
-直接在代码头部修改配置部分。示例如下：
-```
-# --- 路径配置 ---
+### 2. Configuration
+
+Edit `SABA.py` — locate the configuration section at the top:
+
+```python
+# --- Path Configuration ---
 PATH_CONFIG = {
-    "MODEL_ENCODER_PATH": "YOUR_MODEL_PATH",
-    "GOLD_PATH": "CASE/Answer.txt",
-    "TEST_PATH": "CASE/report.json"
+    "MODEL_ENCODER_PATH": "path/to/your/encoder",
+    "INPUT_PATH": "case/Mystery_text.txt",
+    "OUTPUT_QA_PATH": "case/SABA_PostRun_KB/q_a.json",
+    "OUTPUT_REPORT_PATH": "case/SABA_PostRun_KB/report.json",
+    "GOLD_PATH": "case/Answer.txt",
+    "TEST_PATH": "case/report.json",
 }
 
-PATH_CONFIG={
-    "INPUT_PATH": "CASE/Mystery_text.txt",
-    "OUTPUT_QA_PATH": "CASE/SABA_PostRun_KB/q_a.json",
-    "OUTPUT_REPORT_PATH": "CASE/SABA_PostRun_KB/report.json"
-}
-
-# --- LLM 客户端配置 ---
+# --- LLM Client Configuration ---
 LLM_CONFIG = {
-    "api_key": "YOUR_API_KEY",
-    "base_url": "BASE_URL",
-    "model_name": "MODE_NAME",
-    "temperature": 0.0
+    "api_key": "your-api-key",
+    "base_url": "your-base-url",
+    "model_name": "deepseek-v3",   # or gemini-1.5-flash, etc.
+    "temperature": 0.0,
 }
 ```
-## 3. 运行主框架
-确认配置无误后，执行主程序开始推理过程： 
+
+### 3. Run
+
+```bash
+python SABA.py
 ```
-python SABA/SABA.py
-```
-运行完成后，系统将在对应目录下生成两个关键文件：
-- ```q_a.json```: 保存中间探索过程（用于计算线索覆盖度）。  
 
-- ```report.json```: 保存最终推理结果（用于计算召回率）。
+Two key outputs are generated:
+- `q_a.json` — intermediate reasoning trace (for computing Clue Coverage Rate)
+- `report.json` — final prediction (for computing Semantic Recall Rate)
 
+---
 
-# 📊 评估方法
-本项目采用双重指标评估模型在复杂叙事推理中的表现：
+## 📏 Evaluation
 
-## 指标 A：Semantic Recall Rate(SRR)，评估模型输出与标准答案的匹配程度。
-- 下载```sbert-base-chinese-nli```模型
-- 设置路径配置运行评估脚本
-```
+### Metric A — Semantic Recall Rate (SRR)
+
+Evaluates how well the model output matches the gold-standard answer using semantic similarity.
+
+```bash
+# Requires: sentence-transformers
 python Evaluation_Similarity/Evaluation.py
 ```
 
-## 指标 B：ClueCoverageRate(CCR)，评估模型是否识别并利用了案件的关键线索。
-- 查看对应案件目录下的 ```predefined_cues.txt```。
-- 人工检查```q_a.json```中是否包含了上述预定义线索。
+### Metric B — Clue Coverage Rate (CCR)
 
-# 📂 数据集说明
+Measures whether the model identified and utilized the case's critical clues. Check each case directory for:
+- `predefined_cues.txt` — the gold-standard clue list
+- Manually inspect `q_a.json` for clue coverage against the predefined set
 
-dataset 目录按难度分为三个等级，每个案件目录包含：
-- 输入端: ```Mystery_text.txt```原始案件信息
-- SABA输出: ```PostRun_KB```目录包含了SABA输出
-- 基准端: ```predefined_cues.txt```包含预定义线索、```Answer.txt```包含黄金结果
+---
 
-# 📜 引用方式
-如果您在研究中使用了本仓库的代码或 SABA 框架，请引用我们的论文：
+## 📖 Dataset
+
+| Difficulty | Cases | Avg. Length | Description |
+|------------|-------|-------------|-------------|
+| **Easy** | 5 | ~1050 words | Direct inference from explicit clues |
+| **Medium** | 15 | ~1150 words | Multi-step causality required |
+| **Complex** | 11 | ~950 words | Implicit clues + intentional red herrings |
+
+Each case includes the original narrative, predefined critical clues, and gold-standard answers.
+
+---
+
+## 📜 Citation
+
+If you use the SABA framework or code in your research, please cite:
+
+```bibtex
+@inproceedings{fan2026saba,
+  title     = {Self-Awareness before Action: Mitigating Logical Inertia via
+               Proactive Cognitive Awareness},
+  author    = {Fan, Fulong and Liu, Peilin and Liu, FengZhe and Yang, Shuyan
+               and Yan, Gang},
+  booktitle = {Proceedings of the 64th Annual Meeting of the Association for
+               Computational Linguistics (ACL)},
+  year      = {2026},
+  note      = {Findings},
+}
 ```
 
-```
-Due to IP protection, the provided code is a functional skeleton.
+---
+
+## 🛡️ Note
+
+Due to intellectual property protection, the provided code is a functional skeleton. For full experimental reproduction, please refer to the paper's methodology section or contact the authors.
