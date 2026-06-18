@@ -5,6 +5,7 @@
 ### Mitigating Logical Inertia via Proactive Cognitive Awareness
 
 [![ACL 2026](https://img.shields.io/badge/ACL-2026_Findings-8A2BE2)](https://2026.aclweb.org/)
+[![arXiv](https://img.shields.io/badge/arXiv-2604.20413-b31b1b.svg)](https://arxiv.org/abs/2604.20413)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.12+-green.svg)](https://www.python.org/)
 
@@ -159,20 +160,12 @@ Each case includes the original narrative, predefined critical clues, and gold-s
 If you use the SABA framework or code in your research, please cite:
 
 ```bibtex
-@inproceedings{fan2026saba,
-  title     = {Self-Awareness before Action: Mitigating Logical Inertia via
-               Proactive Cognitive Awareness},
-  author    = {Fan, Fulong and Liu, Peilin and Liu, FengZhe and Yang, Shuyan
-               and Yan, Gang},
-  booktitle = {Proceedings of the 64th Annual Meeting of the Association for
-               Computational Linguistics (ACL)},
-  year      = {2026},
-  note      = {Findings},
+@misc{fan2026selfawarenessactionmitigatinglogical,
+      title={Self-Awareness before Action: Mitigating Logical Inertia via Proactive Cognitive Awareness}, 
+      author={Fulong Fan and Peilin Liu and Fengzhe Liu and Shuyan Yang and Gang Yan},
+      year={2026},
+      eprint={2604.20413},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2604.20413}, 
 }
-```
-
----
-
-## 🛡️ Note
-
-Due to intellectual property protection, the provided code is a functional skeleton. For full experimental reproduction, please refer to the paper's methodology section or contact the authors.
